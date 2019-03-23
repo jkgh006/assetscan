@@ -8,7 +8,7 @@ import chardet
 import requests
 from lxml import etree
 
-from Assert_Scan.common.db.sqlite3_db import sqlite3_db
+from common.db.sqlite3_db import sqlite3_db
 portdb = os.path.join(os.path.join(os.path.dirname(__file__), '../datas'), 'ports.db')
 
 class OsType(object):

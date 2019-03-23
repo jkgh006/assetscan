@@ -8,13 +8,14 @@ import subprocess
 import time
 import re
 import cgi
+from optparse import OptionParser, OptionGroup
 
 from Report import Report
 from common.initsql import SQL
 from common.db.sqlite3_db import sqlite3_db
 from common.utils import query_service_and_banner, get_socket_banner, char_convert
 from ProbeTool import HttpWeb
-from constants import computing_ports
+from constants import computing_ports, default_ports
 from pool.thread_pool import ThreadPool
 from IPlugin import IPlugin
 
@@ -126,8 +127,8 @@ class Plugin(IPlugin):
             return
         ipscope = self.package_ipscope(kwargs.get("ipscope"))
         ports = computing_ports(kwargs.get("ports"))
-        pseudo_ip = kwargs.get("pseudo_ip")
-        pseudo_port = kwargs.get("pseudo_port")
+        pseudo_ip = kwargs.get("pseudo_ip","")
+        pseudo_port = kwargs.get("pseudo_port","")
         sps = len(ports) / 1000
         if (sps <= 1):
             ports_list = [ports]
@@ -172,8 +173,24 @@ class Plugin(IPlugin):
         rt.report_html()
         logger.info("report completion [{0}]".format(rt.filename))
 
-if __name__ == "__main__":
+def cmdLineParser():
+    optparser = OptionParser()
+    optparser.add_option("-i", "--ipscope", dest="ipscope", type="string", help="Specify IP scan range,eg: 127.0.0.1/24 or 10.65.10.3-10.65.10.255")
+    optparser.add_option("-p", "--portscope", dest="portscope", type="string",default="web_ports",help="Specify Port scan range,eg: 80,443,8080 or web_ports or top_100 or top_1000")
+    try:
+        (options, args) = optparser.parse_args()
+    except Exception, err:
+        sys.exit(0)
+
+    if len(sys.argv) < 2:
+        optparser.print_help()
+        sys.exit(0)
+
+    ipscope = options.ipscope
+    portscope = options.portscope
+    portscope = default_ports.get(portscope,portscope)
     test = Plugin()
-    ipscope = "111.205.207.140/24"
-    ports = "80,443,8080"
-    test.cmd_run(ipscope=ipscope,ports=ports)
+    test.cmd_run(ipscope=ipscope, ports=portscope)
+
+if __name__ == "__main__":
+    cmdLineParser()

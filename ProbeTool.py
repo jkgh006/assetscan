@@ -48,12 +48,11 @@ class HttpWeb(object):
                         else:
                             banner = content[0:100]
                     assettype = 1
-                    proext = schema
                     break
                 except:
                     banner = ""
                     assettype = 0
-        return banner,service,ostype,assettype,domain,position,proext
+        return banner,service,ostype,assettype,domain,position,schema
 
     @classmethod
     def check_cdn(self,target):

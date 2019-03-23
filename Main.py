@@ -13,9 +13,9 @@ from optparse import OptionParser, OptionGroup
 from Report import Report
 from common.initsql import SQL
 from common.db.sqlite3_db import sqlite3_db
-from common.utils import query_service_and_banner, get_socket_banner, char_convert
+from common.utils import query_service_and_banner, get_socket_banner, char_convert, computing_ports
 from ProbeTool import HttpWeb
-from constants import computing_ports, default_ports
+from constants import default_ports
 from pool.thread_pool import ThreadPool
 from IPlugin import IPlugin
 

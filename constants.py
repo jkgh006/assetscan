@@ -1,3 +1,6 @@
+fingerprint = {
+    "weblogic":["From RFC.*Hypertext Transfer Protocol"]
+}
 default_ports = {
 
     'web_ports': [80, 443,1000,1111,1433,2100,2222,3333,4001,4444,4321,5001,5432,5555,6001,6666,7001, 7002, 7003, 7004, 7005, 7006, 7007, 7008,7777,8000,8090,8001, 8002, 8003, 8004, 8005, 8006, 8007, 8008, 8080, 8081, 8082, 8083, 8084, 8099, 8443,8888,9001,
@@ -113,22 +116,3 @@ default_ports = {
                       63331,
                       64623, 64680, 65000, 65129, 65389]
 }
-def computing_ports(ports):
-    rs_list = []
-    if ports in default_ports.keys():
-        rs_list = default_ports.get(ports)
-    else:
-        ports = str(ports)
-        ports_lev1 = ports.split(",")
-        for p in ports_lev1:
-            if "-" in p:
-                port_lev2 = [int(x) for x in p.split("-")]
-                rs_list = rs_list + range(port_lev2[0], port_lev2[1] + 1)
-            else:
-                rs_list.append(p)
-    rs_list = sorted(rs_list)
-    rs_list = [str(x) for x in rs_list]
-    return rs_list
-
-def is_default_ports(ports):
-    return (ports in default_ports.keys())

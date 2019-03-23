@@ -9,6 +9,8 @@ import requests
 from lxml import etree
 
 from common.db.sqlite3_db import sqlite3_db
+from constants import default_ports, fingerprint
+
 portdb = os.path.join(os.path.join(os.path.dirname(__file__), '../datas'), 'ports.db')
 
 class OsType(object):
@@ -83,6 +85,14 @@ def biying_find(ip):
         pass
     return position, domain, banner
 
+def get_banner_by_content(content):
+    for k,cues in fingerprint.items():
+        for cue in cues:
+            preg = re.compile(cue)
+            ret = re.search(preg,content)
+            if ret:
+                return k
+    return ""
 
 def get_server_profile(headers):
     resp_headers = {}
@@ -167,3 +177,25 @@ def char_convert(content, in_enc=["ASCII", "GB2312", "GBK", "gb18030"], out_enc=
     except IOError, e:
         pass
     return rs_content
+
+def computing_ports(ports):
+    rs_list = []
+    if isinstance(ports,list):
+        return ports
+    if ports in default_ports.keys():
+        rs_list = default_ports.get(ports)
+    else:
+        ports = str(ports)
+        ports_lev1 = ports.split(",")
+        for p in ports_lev1:
+            if "-" in p:
+                port_lev2 = [int(x) for x in p.split("-")]
+                rs_list = rs_list + range(port_lev2[0], port_lev2[1] + 1)
+            else:
+                rs_list.append(p)
+    rs_list = sorted(rs_list)
+    rs_list = [str(x) for x in rs_list]
+    return rs_list
+
+def is_default_ports(ports):
+    return (ports in default_ports.keys())

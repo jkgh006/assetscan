@@ -8,7 +8,8 @@ from urlparse import urlparse
 from lxml import etree
 import requests
 from common.qqwry import IPInfo
-from common.utils import get_server_profile
+from common.utils import get_server_profile, get_banner_by_content
+
 requests.packages.urllib3.disable_warnings(requests.packages.urllib3.exceptions.InsecureRequestWarning)
 
 class HttpWeb(object):
@@ -44,9 +45,9 @@ class HttpWeb(object):
                     if content:
                         rs = re.findall(pregx, content)
                         if rs and len(rs) > 0:
-                            banner = rs[0]
+                            banner = rs[0] if not get_banner_by_content(content) else rs[0]+" ["+get_banner_by_content(content)+"]"
                         else:
-                            banner = content[0:100]
+                            banner = content[0:100] if not get_banner_by_content(content) else content[0:100]+" ["+get_banner_by_content(content)+"]"
                     assettype = 1
                     break
                 except:

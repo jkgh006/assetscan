@@ -13,7 +13,8 @@ from optparse import OptionParser, OptionGroup
 from Report import Report
 from common.initsql import SQL
 from common.db.sqlite3_db import sqlite3_db
-from common.utils import query_service_and_banner, get_socket_banner, char_convert, computing_ports
+from common.utils import query_service_and_banner, get_socket_banner, char_convert, computing_ports, WINDOWS, \
+    UsePlatform
 from ProbeTool import HttpWeb
 from constants import default_ports
 from pool.thread_pool import ThreadPool
@@ -42,7 +43,10 @@ class Plugin(IPlugin):
         logger.info("database initialization completed")
 
     def create_command(self,ipscope,ports,pseudo_ip,pseudo_port):
-        command = ["cmd.exe","/c","masscan",ipscope,"-p",str(ports),"--max-rate",str(self.rate)]
+        if UsePlatform() == WINDOWS:
+            command = ["cmd.exe","/c","masscan",ipscope,"-p",str(ports),"--max-rate",str(self.rate)]
+        else:
+            command = ["masscan", ipscope, "-p", str(ports), "--max-rate", str(self.rate)]
         if pseudo_ip:
             command = command + [" --source-ip ",str(pseudo_ip)]
         if pseudo_port:

@@ -1,5 +1,6 @@
 # -*- coding:utf-8 -*-
 import os
+import platform
 import re
 import socket
 from urlparse import urlparse
@@ -13,11 +14,12 @@ from constants import default_ports, fingerprint
 
 portdb = os.path.join(os.path.join(os.path.dirname(__file__), '../datas'), 'ports.db')
 
+LINUX = "unix"
+WINDOWS = "windows"
+
 class OsType(object):
     WINDOWS_PORTS = [3389]
     LINUX_PORTS = []
-    LINUX = "unix"
-    WINDOWS = "windows"
     @classmethod
     def get_ostype(cls, port=None, server=None, server_app=None, res=None):
         ostype = "unknown"
@@ -26,9 +28,9 @@ class OsType(object):
         if port:
             if isinstance(port,int):
                 if port and (port in only_windows_ports):
-                    ostype = cls.WINDOWS
+                    ostype = WINDOWS
                 elif port in only_linux_ports:
-                    ostype = cls.LINUX
+                    ostype = LINUX
 
             elif isinstance(port,list):
                 counts = len(set(cls.WINDOWS_PORTS+cls.LINUX_PORTS))
@@ -37,19 +39,19 @@ class OsType(object):
                 diff = abs(win_num-lin_num)/counts
                 if diff > 0.7:
                     if win_num > lin_num:
-                        ostype = cls.WINDOWS
+                        ostype = WINDOWS
                     else:
-                        ostype = cls.LINUX
+                        ostype = LINUX
         if server:
             if isinstance(server,list):
                 server = ",".join(server)
             regx = re.compile(r"Microsof|iis",re.I)
             if regx.findall(server):
-                ostype = cls.WINDOWS
+                ostype = WINDOWS
 
         if server_app:
             if any(["asp" in server_app,"aspx" in server_app]):
-                ostype = cls.WINDOWS
+                ostype = WINDOWS
 
         if res and res.status_code == 500:
             regx = re.compile(r"[a-zA-Z]:(?:\\(?:[a-zA-Z0-9_]+.[a-zA-Z0-9_]{1,16}))+", re.I)
@@ -153,6 +155,14 @@ def get_socket_banner(ip, port,ref_banner=""):
     finally:
         s.close()
     return ref_banner
+
+def UsePlatform():
+    sysstr = platform.system()
+    if(sysstr =="Windows"):
+        return WINDOWS
+    else:
+        return LINUX
+
 
 def query_service_and_banner(port,protocol):
     db = sqlite3_db(portdb)

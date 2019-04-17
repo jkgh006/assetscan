@@ -97,7 +97,10 @@ class Report(object):
             for c in cues:
                 port = c.get("port")
                 schema = c.get("schema")
-                go = '<a href="{schema}://{ip}:{port}" target="_blank">{port}</a>'.format(schema=schema, port=port,ip=ip)
+                if schema:
+                    go = '<a href="{schema}://{ip}:{port}" target="_blank">{port}</a>'.format(schema=schema, port=port,ip=ip)
+                else:
+                    go = '<a href="#">({port})</a>'.format(port=port)
                 urls.append(go)
                 trs.append(tpl2.format(ip=ip,port=go,banner=cgi.escape(c.get("banner")),service=c.get("service"),position=c.get("position"),protocol=c.get("protocol"),domain=c.get("domain")))
             title = "{ip}------------------------------------[{ports}]".format(ip=ip,ports=",".join(urls))

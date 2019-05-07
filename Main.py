@@ -181,6 +181,7 @@ def cmdLineParser():
     optparser = OptionParser()
     optparser.add_option("-i", "--ipscope", dest="ipscope", type="string", help="Specify IP scan range,eg: 127.0.0.1/24 or 10.65.10.3-10.65.10.255")
     optparser.add_option("-p", "--portscope", dest="portscope", type="string",default="web_ports",help="Specify Port scan range,eg: 80,443,8080 or web_ports or top_100 or top_1000")
+    optparser.add_option("-f", "--file", dest="file", type="string",default="",help="asset's file")
     try:
         (options, args) = optparser.parse_args()
     except Exception, err:
@@ -192,6 +193,10 @@ def cmdLineParser():
 
     ipscope = options.ipscope
     portscope = options.portscope
+    assetfile = options.file
+    if assetfile:
+        with open(assetfile,"rb+") as file:
+            ipscope = file.read()
     portscope = default_ports.get(portscope,portscope)
     test = Plugin()
     test.cmd_run(ipscope=ipscope, ports=portscope)

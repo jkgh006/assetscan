@@ -46,7 +46,7 @@ class Plugin(IPlugin):
         if UsePlatform() == WINDOWS:
             command = ["cmd.exe","/c","masscan",ipscope,"-p",str(ports),"--max-rate",str(self.rate)]
         else:
-            command = ["/bin/bash","-c","masscan", ipscope, "-p", str(ports), "--max-rate", str(self.rate)]
+            command = ["masscan", ipscope, "-p", str(ports), "--max-rate", str(self.rate)]
         if pseudo_ip:
             command = command + [" --source-ip ",str(pseudo_ip)]
         if pseudo_port:

@@ -1,6 +1,9 @@
 fingerprint = {
     "weblogic":["From RFC.*Hypertext Transfer Protocol"]
 }
+
+finger2https = ["400 The plain HTTP request was sent to HTTPS port"]
+
 default_ports = {
 
     'web_ports': [80, 443,1000,1111,1433,2100,2222,3333,4001,4444,4321,5001,5432,5555,6001,6666,7001, 7002, 7003, 7004, 7005, 7006, 7007, 7008,7777,8000,8090,8001, 8002, 8003, 8004, 8005, 8006, 8007, 8008, 8080, 8081, 8082, 8083, 8084, 8099, 8443,8888,9001,

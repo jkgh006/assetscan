@@ -163,6 +163,17 @@ def UsePlatform():
     else:
         return LINUX
 
+def is_domain(domain):
+    domain_regex = re.compile(
+        r'(?:[A-Z0-9_](?:[A-Z0-9-_]{0,247}[A-Z0-9])?\.)+(?:[A-Z]{2,6}|[A-Z0-9-]{2,}(?<!-))\Z',
+        re.IGNORECASE)
+    return True if domain_regex.match(domain) else False
+
+def is_ipv4(address):
+    ipv4_regex = re.compile(
+        r'(?:25[0-5]|2[0-4]\d|[0-1]?\d?\d)(?:\.(?:25[0-5]|2[0-4]\d|[0-1]?\d?\d)){3}',
+        re.IGNORECASE)
+    return True if ipv4_regex.match(address) else False
 
 def query_service_and_banner(port,protocol):
     db = sqlite3_db(portdb)

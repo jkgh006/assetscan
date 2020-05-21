@@ -1,0 +1,107 @@
+20-05-20 21:06:45 INFO {4868-4628 Main._store:207} start collecting results information.........
+20-05-20 21:06:45 INFO {5004-3632 dirfuzz.init_db:48} database (fuzz.db) initialization completed
+20-05-20 21:06:45 INFO {4868-3028 Main.init_db:49} database (port.db) initialization completed
+20-05-20 21:06:45 INFO {4868-3028 Main._run:177} tasks start running
+20-05-20 21:06:57 INFO {4868-3028 TaskCenter.update_task_status:39} task(portscan) status change,status:4
+20-05-20 21:06:57 INFO {4868-3028 Main._run:204} portscan_task is finished
+20-05-20 21:06:57 INFO {4868-3028 Main._create_report:232} start creating reports.........
+20-05-20 21:06:57 INFO {4868-3028 Main._create_report:235} report completion [D:\assetscan-master\repertory\2020-05-20\report.html]
+20-05-20 21:09:19 INFO {6932-3140 Main._store:207} start collecting results information.........
+20-05-20 21:09:19 INFO {6932-6516 Main.init_db:49} database (port.db) initialization completed
+20-05-20 21:09:19 INFO {6932-6516 Main._run:177} tasks start running
+20-05-20 21:09:19 INFO {5076-5916 dirfuzz.init_db:48} database (fuzz.db) initialization completed
+20-05-20 21:09:31 INFO {6932-6516 TaskCenter.update_task_status:38} task(portscan) status change,status:4
+20-05-20 21:09:31 INFO {6932-6516 Main._run:204} portscan_task is finished
+20-05-20 21:09:31 INFO {6932-6516 Main._create_report:232} start creating reports.........
+20-05-20 21:09:31 INFO {6932-6516 Main._create_report:235} report completion [D:\assetscan-master\repertory\2020-05-20\report.html]
+20-05-20 21:11:02 INFO {3308-5616 Main._store:207} start collecting results information.........
+20-05-20 21:11:02 INFO {5764-6452 dirfuzz.init_db:48} database (fuzz.db) initialization completed
+20-05-20 21:11:02 INFO {3308-4492 Main.init_db:49} database (port.db) initialization completed
+20-05-20 21:11:02 INFO {3308-4492 Main._run:177} tasks start running
+20-05-20 21:11:14 INFO {3308-4492 TaskCenter.update_task_status:40} task(portscan) status change,status:4
+20-05-20 21:11:14 INFO {3308-4492 Main._run:204} portscan_task is finished
+20-05-20 21:11:14 INFO {3308-4492 Main._create_report:232} start creating reports.........
+20-05-20 21:11:14 INFO {3308-4492 Main._create_report:235} report completion [D:\assetscan-master\repertory\2020-05-20\report.html]
+20-05-20 21:12:05 INFO {572-716 Main._store:207} start collecting results information.........
+20-05-20 21:12:05 INFO {3880-6108 dirfuzz.init_db:48} database (fuzz.db) initialization completed
+20-05-20 21:12:05 INFO {572-4508 Main.init_db:49} database (port.db) initialization completed
+20-05-20 21:12:05 INFO {572-4508 Main._run:177} tasks start running
+20-05-20 21:12:18 INFO {572-4508 TaskCenter.update_task_status:40} task(portscan) status change,status:4
+20-05-20 21:12:18 INFO {572-4508 Main._run:204} portscan_task is finished
+20-05-20 21:12:18 INFO {572-4508 Main._create_report:232} start creating reports.........
+20-05-20 21:12:18 INFO {572-4508 Main._create_report:235} report completion [D:\assetscan-master\repertory\2020-05-20\report.html]
+20-05-20 21:15:27 INFO {6992-2716 Main._store:207} start collecting results information.........
+20-05-20 21:15:27 INFO {4672-6752 dirfuzz.init_db:48} database (fuzz.db) initialization completed
+20-05-20 21:15:27 INFO {6992-5268 Main.init_db:49} database (port.db) initialization completed
+20-05-20 21:15:27 INFO {6992-5268 Main._run:177} tasks start running
+20-05-20 21:15:40 INFO {6992-5268 TaskCenter.update_task_status:40} task(portscan) status change,status:4
+20-05-20 21:15:40 INFO {6992-5268 Main._run:204} portscan_task is finished
+20-05-20 21:15:40 INFO {6992-5268 Main._create_report:232} start creating reports.........
+20-05-20 21:15:40 INFO {6992-5268 Main._create_report:235} report completion [D:\assetscan-master\repertory\2020-05-20\report.html]
+20-05-20 21:55:03 INFO {4440-6756 Main._store:207} start collecting results information.........
+20-05-20 21:55:03 INFO {3668-5488 dirfuzz.init_db:48} database (fuzz.db) initialization completed
+20-05-20 21:55:03 INFO {4440-668 Main.init_db:49} database (port.db) initialization completed
+20-05-20 21:55:03 INFO {4440-668 Main._run:177} tasks start running
+20-05-20 21:55:29 INFO {6804-5884 Main._store:207} start collecting results information.........
+20-05-20 21:55:29 INFO {6348-3748 dirfuzz.init_db:48} database (fuzz.db) initialization completed
+20-05-20 21:55:29 INFO {6804-2732 Main.init_db:49} database (port.db) initialization completed
+20-05-20 21:55:29 INFO {6804-2732 Main._run:177} tasks start running
+20-05-20 21:55:41 INFO {6804-2732 TaskCenter.update_task_status:40} task(portscan) status change,status:4
+20-05-20 21:55:41 INFO {6804-2732 Main._run:204} portscan_task is finished
+20-05-20 21:55:41 INFO {6804-2732 Main._create_report:231} start creating reports.........
+20-05-20 21:55:41 INFO {6804-2732 Main._create_report:234} report completion [D:\assetscan-master\repertory\2020-05-20\report.html]
+20-05-20 21:55:41 INFO {6348-3748 dirfuzz.funzz:141} dirfuzz task will finished (4)s
+20-05-20 21:55:42 INFO {6348-3748 TaskCenter.update_task_status:40} task(dirscan) status change,status:4
+20-05-20 21:55:42 INFO {6348-3748 dirfuzz.funzz:141} dirfuzz task will finished (3)s
+20-05-20 21:55:42 INFO {6348-3748 TaskCenter.update_task_status:40} task(dirscan) status change,status:4
+20-05-20 21:55:42 INFO {6348-3748 dirfuzz.funzz:141} dirfuzz task will finished (2)s
+20-05-20 21:55:43 INFO {6348-3748 TaskCenter.update_task_status:40} task(dirscan) status change,status:4
+20-05-20 21:55:43 INFO {6348-3748 dirfuzz.funzz:141} dirfuzz task will finished (1)s
+20-05-20 21:55:44 INFO {6348-3748 TaskCenter.update_task_status:40} task(dirscan) status change,status:4
+20-05-20 21:55:44 INFO {6348-3748 dirfuzz.funzz:141} dirfuzz task will finished (0)s
+20-05-20 21:55:44 INFO {6348-3748 TaskCenter.update_task_status:40} task(dirscan) status change,status:4
+20-05-20 21:55:45 INFO {6348-3748 dirfuzz.result_unique:97} url:http://42.48.85.54:80 
+20-05-20 21:58:46 INFO {3864-4812 Main._store:207} start collecting results information.........
+20-05-20 21:58:46 INFO {3048-2872 dirfuzz.init_db:48} database (fuzz.db) initialization completed
+20-05-20 21:58:46 INFO {3864-3540 Main.init_db:49} database (port.db) initialization completed
+20-05-20 21:58:46 INFO {3864-3540 Main._run:177} tasks start running
+20-05-20 21:58:58 INFO {3864-3540 Main._run:204} portscan_task is finished
+20-05-20 21:58:58 INFO {3864-3540 Main._create_report:231} start creating reports.........
+20-05-20 21:58:58 INFO {3864-3540 Main._create_report:234} report completion [D:\assetscan-master\repertory\2020-05-20\report.html]
+20-05-20 21:59:25 INFO {5320-5824 Main._store:207} start collecting results information.........
+20-05-20 21:59:25 INFO {6100-4996 dirfuzz.init_db:48} database (fuzz.db) initialization completed
+20-05-20 21:59:25 INFO {5320-4808 Main.init_db:49} database (port.db) initialization completed
+20-05-20 21:59:26 INFO {5320-4808 Main._run:177} tasks start running
+20-05-20 22:00:10 INFO {6704-3624 Main._store:207} start collecting results information.........
+20-05-20 22:00:10 INFO {4240-3828 dirfuzz.init_db:48} database (fuzz.db) initialization completed
+20-05-20 22:00:10 INFO {6704-4728 Main.init_db:49} database (port.db) initialization completed
+20-05-20 22:00:10 INFO {6704-4728 Main._run:177} tasks start running
+20-05-20 22:01:17 INFO {6520-6188 Main._store:207} start collecting results information.........
+20-05-20 22:01:17 INFO {6520-5252 Main.init_db:49} database (port.db) initialization completed
+20-05-20 22:01:17 INFO {6520-5252 Main._run:177} tasks start running
+20-05-20 22:01:17 INFO {6556-6680 dirfuzz.init_db:48} database (fuzz.db) initialization completed
+20-05-20 22:01:37 INFO {4648-3968 Main._store:207} start collecting results information.........
+20-05-20 22:01:37 INFO {4648-4880 Main.init_db:49} database (port.db) initialization completed
+20-05-20 22:01:37 INFO {4648-4880 Main._run:177} tasks start running
+20-05-20 22:01:37 INFO {2960-3884 dirfuzz.init_db:48} database (fuzz.db) initialization completed
+20-05-20 22:02:28 INFO {1180-5884 Main._store:207} start collecting results information.........
+20-05-20 22:02:28 INFO {1180-6336 Main.init_db:49} database (port.db) initialization completed
+20-05-20 22:02:28 INFO {1180-6336 Main._run:177} tasks start running
+20-05-20 22:02:28 INFO {5380-4552 dirfuzz.init_db:48} database (fuzz.db) initialization completed
+20-05-20 22:02:41 INFO {4104-4328 Main._store:207} start collecting results information.........
+20-05-20 22:02:41 INFO {4104-6100 Main.init_db:49} database (port.db) initialization completed
+20-05-20 22:02:41 INFO {4104-6100 Main._run:177} tasks start running
+20-05-20 22:02:41 INFO {3840-3808 dirfuzz.init_db:48} database (fuzz.db) initialization completed
+20-05-20 22:04:55 INFO {3588-4000 Main._store:207} start collecting results information.........
+20-05-20 22:04:55 INFO {3588-6356 Main.init_db:49} database (port.db) initialization completed
+20-05-20 22:04:55 INFO {3588-6356 Main._run:177} tasks start running
+20-05-20 22:04:56 INFO {4252-2716 dirfuzz.init_db:48} database (fuzz.db) initialization completed
+20-05-20 22:05:13 INFO {3568-4380 Main._store:207} start collecting results information.........
+20-05-20 22:05:13 INFO {3568-6692 Main.init_db:49} database (port.db) initialization completed
+20-05-20 22:05:13 INFO {3568-6692 Main._run:177} tasks start running
+20-05-20 22:05:13 INFO {2736-5488 dirfuzz.init_db:48} database (fuzz.db) initialization completed
+20-05-20 22:05:26 INFO {3568-6692 Main._run:204} portscan_task is finished
+20-05-20 22:05:26 INFO {3568-6692 Main._create_report:231} start creating reports.........
+20-05-20 22:05:26 INFO {3568-6692 Main._create_report:234} report completion [D:\assetscan-master\repertory\2020-05-20\report.html]
+20-05-20 22:05:27 INFO {2404-4108 TaskCenter.run:36} All tasks(dirscan,portscan) completed
+20-05-20 22:05:30 INFO {2736-5488 dirfuzz.result_unique:97} url:https://42.48.85.54:443 

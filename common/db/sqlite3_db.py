@@ -76,7 +76,6 @@ class sqlite3_db(object):
         try:
             result = self.cursor.execute(sql)
         except (sqlite3.DatabaseError, sqlite3.OperationalError), msg:
-            print sql
             errMsg = "exec sql query error,msg:%s" % msg
             raise Exception(errMsg)
         return result

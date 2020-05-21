@@ -1,0 +1,3 @@
+https://222.175.107.35:443      Welcome to OpenResty!
+https://www.bobdirectbank.com:443      北京银行直销银行
+http://www.bobdirectbank.com:80      北京银行直销银行

@@ -9,11 +9,20 @@ from lxml import etree
 import requests
 from common.qqwry import IPInfo
 from common.utils import get_server_profile, get_banner_by_content
+from constants import finger2https
 
 requests.packages.urllib3.disable_warnings(requests.packages.urllib3.exceptions.InsecureRequestWarning)
 
 class HttpWeb(object):
     NOT_DETECT_PORTS = [22,21,3389]
+
+    @classmethod
+    def is_ssl_request(cls,content):
+        for x in finger2https:
+            if len(content) < 2000 and x.lower() in content.lower():
+                return True
+        return False
+
     @classmethod
     def detect(cls,ip,port,checkdomain=True):
         assettype = 0
@@ -23,7 +32,7 @@ class HttpWeb(object):
         if not port in cls.NOT_DETECT_PORTS:
             if port == 80:
                 schemas = ["http"]
-            elif port == 443:
+            elif port == 443 or port == 8443:
                 schemas = ["https"]
             else:
                 schemas = ["http", "https"]
@@ -33,6 +42,8 @@ class HttpWeb(object):
                 try:
                     res = requests.get(url, verify=False, allow_redirects=True, timeout=1)
                     content = res.content
+                    if cls.is_ssl_request(content):
+                        continue
                     headers = res.headers
                     ostype, server, server_app = get_server_profile(headers)
                     ostype = OsType.get_ostype(port=port,server=server,server_app=server_app,res=res)

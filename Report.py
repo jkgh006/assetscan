@@ -20,7 +20,7 @@ class Report(object):
         results = {}
         db = sqlite3_db(self.portdb)
         rs = db.queryall("select * from asset")
-        for id, ip, port, domain, banner, protocol, service, assettype, position, schema in rs:
+        for id, taskid,ip, port, domain, banner, protocol, service, assettype, position, schema in rs:
             if results.get(ip, None):
                 results.get(ip).append({"port": port, "domain": domain, "banner": base64.b64decode(banner),
                                              "protocol": protocol, "service": service, "assettype": assettype,

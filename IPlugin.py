@@ -1,8 +1,6 @@
 # -*- coding:utf-8 -*-
 import md5
 import threading
-from Queue import Queue
-
 from common.logger.log_util import LogUtil as logging
 logger = logging.getLogger(__name__)
 mu = threading.Lock()
@@ -36,7 +34,7 @@ class ReportManage(object):
         rpt = ReportManage()
         rpt._results = []
         rpt._unique_hash = []
-        rpt._output_queue = Queue()
+        rpt._output_queue = []
         return rpt
 
 
@@ -104,7 +102,6 @@ class IPlugin(object):
         return self._level
 
     def _report(self,package,unique=[]):
-        unique_hash = ""
         if isinstance(package,list) or isinstance(package,tuple):
             if unique:
                 rsdiff = list(set(unique) - set(range(len(package))))
@@ -136,7 +133,7 @@ class IPlugin(object):
             if not unique_hash in self.result_manage.unique_hash:
                 self.result_manage.unique_hash.append(unique_hash)
                 self.result_manage.results.append(filters)
-                self.result_manage.output_queue.put(package)
+                self.result_manage.output_queue.append(package)
             mu.release()
 
     def _run(self, *args,**kwargs):

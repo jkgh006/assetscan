@@ -220,3 +220,111 @@ def computing_ports(ports):
 
 def is_default_ports(ports):
     return (ports in default_ports.keys())
+
+class CommonUtils(object):
+    @classmethod
+    def ListTrim(cls, StringList, char=[]):
+        rs_list = []
+        if not char:
+            for s in StringList:
+                if s.strip() == "":
+                    continue
+                else:
+                    rs_list.append(s.strip())
+        else:
+            for s in StringList:
+                if s.strip() in char:
+                    continue
+                else:
+                    rs_list.append(s.strip())
+        return rs_list
+
+    @classmethod
+    def getIp(cls, domain):
+        try:
+            myaddr = socket.getaddrinfo(domain, 'http')[0][4][0]
+            return myaddr
+        except:
+            return None
+
+    @classmethod
+    def package_ipscope_c_net(cls, ipscope):
+        rs_list = []
+        retlist = cls.package_ipscope(ipscope, retType="list")
+        for ip in retlist:
+            ipcues = ip.split(".")
+            newip = "{0}.{1}.{2}.0/24".format(ipcues[0], ipcues[1], ipcues[2])
+            rs_list.append(newip)
+        rs_list = list(set(rs_list))
+        return rs_list
+
+    @classmethod
+    def package_ipscope(cls, ipscope, handle_ip=True, retType="string"):
+        rs_list = []
+        ret_list = []
+        ipscope_list = cls.ListTrim(ipscope.split("\n"))
+        for cues in ipscope_list:
+            if "," in cues:
+                rs_list = rs_list + cls.ListTrim(cues.split(","))
+            elif ";" in cues:
+                rs_list = rs_list + cls.ListTrim(cues.split(";"))
+            else:
+                rs_list.append(cues)
+
+        rs_list = list(set(rs_list))
+        if handle_ip:
+            for tar in rs_list:
+                if is_domain(tar):
+                    ip = cls.getIp(tar)
+                    if ip:
+                        ret_list.append(ip)
+                else:
+                    ret_list.append(tar)
+            ret_list = list(set(ret_list))
+        else:
+            ret_list = rs_list
+
+        if retType is "string":
+            return ",".join(ret_list)
+        else:
+            return ret_list
+
+    @classmethod
+    def div_list(cls, ls, n):
+        if not isinstance(ls, list) or not isinstance(n, int):
+            return [ls]
+        ls_len = len(ls)
+        if n <= 0 or 0 == ls_len:
+            return [ls]
+        if n > ls_len:
+            return [ls]
+        elif n == ls_len:
+            return [[i] for i in ls]
+        else:
+            j = ls_len / n
+            k = ls_len % n
+            ls_return = []
+            for i in xrange(0, (n - 1) * j, j):
+                ls_return.append(ls[i:i + j])
+            ls_return.append(ls[(n - 1) * j:])
+            return ls_return
+
+    @classmethod
+    def create_command(cls,scanmode, ipscope, ports, pseudo_ip, pseudo_port,rate):
+        command = ""
+        if scanmode == "fast":
+            if UsePlatform() == WINDOWS:
+                command = ["cmd.exe", "/c", "masscan", ipscope, "-p", str(ports), "--max-rate", str(rate)]
+            else:
+                command = ["masscan", ipscope, "-p", str(ports), "--max-rate", str(rate)]
+            if pseudo_ip:
+                command = command + [" --source-ip ", str(pseudo_ip)]
+            if pseudo_port:
+                command = command + [" --source-port ", str(pseudo_port)]
+            return command
+        else:
+            if UsePlatform() == WINDOWS:
+                command = ["cmd.exe", "/c", "main", "-p", str(ports), "-h",ipscope, "-r", str(rate)]
+            else:
+                command = ["main", "-p", str(ports), ipscope, "-r", str(rate)]
+        return command

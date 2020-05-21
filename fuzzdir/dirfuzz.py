@@ -31,6 +31,7 @@ class DirFuzz(object):
         self.taskrun = False
         self.finished = False
         self.single = False if not self.url else True
+        self.name = "dirscan"
 
     def init_db(self):
         if not self.taskrun:
@@ -48,7 +49,7 @@ class DirFuzz(object):
         logger.info("database (fuzz.db) initialization completed")
 
     def init_dir_dict(self):
-        filename = os.path.join(os.path.join(os.path.dirname(__file__), 'dict'),"directory.test.lst")
+        filename = os.path.join(os.path.join(os.path.dirname(__file__), 'dict'),"directory.lst")
         with open(filename,"rb+") as file:
             self.filename = [x.strip() for x in file.readlines()]
 
@@ -71,7 +72,7 @@ class DirFuzz(object):
         newurl = urljoin(url,filename)
         try:
             res = requests.get(newurl, verify=False, allow_redirects=True, timeout=2)
-            condition1 = (abs(len(res.content)-len(cache[0])) <=20) or (abs(len(res.content)-len(cache[1])) <= 20) or (abs(len(res.content)-len(cache[2])) <= 20)
+            condition1 = (abs(len(res.content)-len(cache[0])) <=20) or (abs(len(res.content)-len(cache[1])) <= 20) or (abs(len(res.content.replace(filename,"").replace(newurl,""))-len(cache[2].replace(filename,"").replace(newurl,""))) <= 20)
             condition2 = (res.status_code !=405) and ((res.status_code >= 400 and res.status_code < 500) or (res.status_code > 500) or (res.status_code < 200))
             if condition2:
                 pass
@@ -86,7 +87,8 @@ class DirFuzz(object):
             pass
 
     def result_unique(self):
-        rs = self.fuzzdb.queryall("select * from (select *,count(reslength) as flag from fuzztask where taskid={0} and assetid={1} group by reslength) where flag=1".format(self.taskid,self.assetid))
+        sql = "select * from (select *,count(reslength) as flag from fuzztask where taskid={0} group by reslength) where flag=1".format(self.taskid,self.assetid)
+        rs = self.fuzzdb.queryall(sql)
         sql_1 = "delete from fuzztask"
         sql_2 = "update sqlite_sequence SET seq = 0 where name ='fuzztask'"
         self.fuzzdb.query(sql_1)
@@ -122,6 +124,7 @@ class DirFuzz(object):
             while not self.finished:
                 time.sleep(0.2)
                 if  task_null_count >= 5:
+                    TaskCenter.update_task_status(self.statusqueue, "dirscan", TaskStatus.FINISHED)
                     self.finished = True
                     continue
                 if not msgqueue.empty():
@@ -139,7 +142,7 @@ class DirFuzz(object):
                     if TaskCenter.task_is_finished(self.statusqueue,"portscan"):
                         task_null_count = task_null_count+1
                         time.sleep(0.5)
-                        TaskCenter.update_task_status(self.statusqueue,"dirscan",TaskStatus.FINISHED)
+
         tp.wait_all_complete()
         self.result_unique()
 

@@ -13,7 +13,7 @@ class Report(object):
     """
     def __init__(self,portdb):
         self.portdb = portdb
-        self.filename = os.path.join(os.path.dirname(self.portdb),"report.html")
+        self.filename = self.portdb.replace("port.db","report.html")
         self.tplfile = os.path.join(os.path.dirname(__file__), 'datas','tpl.html')
 
     def get_scan_result(self):
@@ -113,5 +113,5 @@ class Report(object):
         f2.close()
 
 if __name__ == "__main__":
-    test = Report(r"E:\Penetration\Assert_Scan\repertory\2019-03-22_22_02_02\rs.db")
+    test = Report(r"D:\gitproject\assetscan\repertory\2020-05-21\13_38_27.port.db")
     test.report_html()

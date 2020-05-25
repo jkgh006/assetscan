@@ -1,4 +1,4 @@
 lxml==3.2.3
-requests==2.18.4
+requests==2.20.0
 chardet==3.0.4
 dnspython==1.16.0

@@ -3,11 +3,7 @@ import os
 import platform
 import re
 import socket
-from urlparse import urlparse
-
-import chardet
-import requests
-from lxml import etree
+from thirdparty import chardet
 
 from common.db.sqlite3_db import sqlite3_db
 from constants import default_ports, fingerprint
@@ -59,33 +55,6 @@ class OsType(object):
                 ostype = "windows"
 
         return ostype
-
-def biying_find(ip):
-    position,domain,banner = "","",""
-    url = "https://www.bing.com/search?q=ip%3A{ip}&qs=n".format(ip=ip)
-    try:
-        res = requests.get(url, verify=False, allow_redirects=True, timeout=1)
-        content = res.content
-        page = etree.HTML(content.decode('utf-8'))
-        divnodes = page.xpath(u"//div[@class='b_xlText']")
-        for divnode in divnodes:
-            position = divnode.text
-
-        divnodes = page.xpath(u"//li[@class='b_algo']")
-        for divnode in divnodes:
-            bnode = divnode.xpath(u"div[@class='b_title']")
-            if bnode:
-                alink = bnode[0].xpath(u"h2/a")
-            else:
-                alink = divnode.xpath(u"h2/a")
-            banner = alink[0].text
-            href = alink[0].attrib.get("href")
-            domain = urlparse(href).netloc
-            if domain and banner:
-                break
-    except:
-        pass
-    return position, domain, banner
 
 def get_banner_by_content(content):
     for k,cues in fingerprint.items():
@@ -321,7 +290,6 @@ class CommonUtils(object):
 
     @classmethod
     def create_command(cls,scanmode, ipscope, ports, pseudo_ip, pseudo_port,rate):
-        command = ""
         if scanmode == "fast":
             if UsePlatform() == WINDOWS:
                 command = ["cmd.exe", "/c", "masscan", ipscope, "-p", str(ports), "--max-rate", str(rate)]
@@ -331,7 +299,6 @@ class CommonUtils(object):
                 command = command + [" --source-ip ", str(pseudo_ip)]
             if pseudo_port:
                 command = command + [" --source-port ", str(pseudo_port)]
-            return command
         else:
             if UsePlatform() == WINDOWS:
                 command = ["cmd.exe", "/c", "main", "-p", str(ports), "-h",ipscope, "-r", str(rate)]

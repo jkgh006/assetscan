@@ -22,6 +22,7 @@ from IPlugin import IPlugin
 
 from common.logger.log_util import LogUtil as logging
 from report.ReportCenter import Report
+from thirdparty.connection.http_urllib3 import HttpUtil
 
 logger = logging.getLogger(__name__)
 class PortScan(IPlugin):
@@ -117,6 +118,7 @@ class PortScan(IPlugin):
     def _store(self):
         logger.info("start collecting results information.........")
         self.product = 0
+        httpclient = HttpUtil()
         while not self.finished:
             time.sleep(0.2)
             if not self.result_manage.output_queue:
@@ -124,7 +126,7 @@ class PortScan(IPlugin):
             else:
                 ip, port, protocol = self.result_manage.output_queue.pop()
                 ref_service, ref_banner = query_service_and_banner(port, protocol)
-                web_banner, web_service, ostype, assettype, domain, position, proext = HttpWeb.detect(ip, port)
+                web_banner, web_service, ostype, assettype, domain, position, proext = HttpWeb.detect(ip, port,httpclient)
                 banner = web_banner if web_banner else get_socket_banner(ip, port, ref_banner)
                 banner = char_convert(banner)
                 banner = base64.b64encode(banner)

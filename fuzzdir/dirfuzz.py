@@ -6,10 +6,11 @@ import sys
 import threading
 import time
 from optparse import OptionParser
-import requests
+from thirdparty.connection.http_urllib3 import HttpUtil
 
 from TaskCenter import TaskStatus, TaskCenter
 from common.initsql import SQL3
+from common.utils import char_convert
 from pool.thread_pool import ThreadPool
 from ProbeTool import HttpWeb
 from common.db.sqlite3_db import sqlite3_db
@@ -57,9 +58,9 @@ class DirFuzz(object):
         try:
             filename = "".join(random.sample('abcdefghijklmnopqrstuvwxyz0123456789', 6)) + ".css"
             dirname = "".join(random.sample('abcdefghijklmnopqrstuvwxyz0123456789', 6)) + "/"
-            res1 = requests.get(urljoin(url,filename), verify=False, allow_redirects=True, timeout=3)
-            res2 = requests.get(urljoin(url, dirname), verify=False, allow_redirects=True, timeout=3)
-            res3 = requests.get(url, verify=False, allow_redirects=True, timeout=3)
+            res1 = self.httpclient.request(urljoin(url,filename), timeout=3,redirect=True)
+            res2 = self.httpclient.request(urljoin(url, dirname), timeout=3,redirect=True)
+            res3 = self.httpclient.request(url,timeout=3,redirect=True)
             content = res3.content
             rs_one = {"taskid": self.taskid, "assetid": self.assetid, "url": url,"banner": base64.b64encode(content[0:100]), "reslength": len(content), "status": 1}
             self.fuzzdb.insert('fuzztask', rs_one, filter=False)
@@ -71,7 +72,7 @@ class DirFuzz(object):
     def req_ad_file(self,url,filename,cache):
         newurl = urljoin(url,filename)
         try:
-            res = requests.get(newurl, verify=False, allow_redirects=True, timeout=3)
+            res = self.httpclient.request(newurl,timeout=3,redirect=True)
             condition1 = (abs(len(res.content)-len(cache[0])) <=20) or (abs(len(res.content)-len(cache[1])) <= 20) or (abs(len(res.content.replace(filename,"").replace(newurl,""))-len(cache[2].replace(filename,"").replace(newurl,""))) <= 20)
             condition2 = (res.status_code !=405) and ((res.status_code >= 400 and res.status_code < 500) or (res.status_code > 500) or (res.status_code < 200))
             if condition2:
@@ -80,7 +81,7 @@ class DirFuzz(object):
                 if not condition1:
                     if mu.acquire():
                         content = res.content
-                        rs_one = {"taskid":self.taskid,"assetid":self.assetid,"url":newurl,"path":filename,"reqcode":res.status_code,"banner":base64.b64encode(content[0:100]),"reslength":len(content),"status":1}
+                        rs_one = {"taskid":self.taskid,"assetid":self.assetid,"url":newurl,"path":filename,"reqcode":res.status_code,"banner":base64.b64encode(char_convert(content[0:100])),"reslength":len(content),"status":1}
                         self.fuzzdb.insert('fuzztask', rs_one, filter=False)
                         mu.release()
         except:
@@ -104,11 +105,12 @@ class DirFuzz(object):
         self.init_db()
         self.init_dir_dict()
         tp = ThreadPool(10)
+        self.httpclient = HttpUtil()
         if msgqueue is None:
             if not self.single:
                 rs = self.assetdb.query_all("select * from asset")
                 for id, taskid,ip, port, domain, banner, protocol, service, assettype, position, schema in rs:
-                    web_banner, web_service, ostype, assettype, domain, position, proext = HttpWeb.detect(ip, port)
+                    web_banner, web_service, ostype, assettype, domain, position, proext = HttpWeb.detect(ip, port,self.httpclient)
                     if proext:
                         url = "{schema}://{ip}:{port}".format(schema=proext,ip=ip,port=port)
                         rs = self.cache_content(url)
@@ -131,7 +133,7 @@ class DirFuzz(object):
                     rs_one = msgqueue.get(True)
                     self.taskid = rs_one.get("taskid")
                     self.assetid = rs_one.get("assetid")
-                    web_banner, web_service, ostype, assettype, domain, position, proext = HttpWeb.detect(rs_one.get("ip"), rs_one.get("port"))
+                    web_banner, web_service, ostype, assettype, domain, position, proext = HttpWeb.detect(rs_one.get("ip"), rs_one.get("port"),self.httpclient)
                     if proext:
                         url = "{schema}://{ip}:{port}".format(schema=proext, ip=rs_one.get("ip"), port=rs_one.get("port"))
                         rs = self.cache_content(url)

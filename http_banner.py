@@ -1,7 +1,6 @@
 import threading
-from Main import Plugin
 from ProbeTool import HttpWeb
-from common.utils import query_service_and_banner, get_socket_banner
+from common.utils import query_service_and_banner, get_socket_banner, CommonUtils
 from constants import default_ports
 from pool.thread_pool import ThreadPool
 mu = threading.Lock()
@@ -9,7 +8,7 @@ ports = default_ports.get("web_ports")
 with open("hosts.txt", "rb+") as file:
     ipscope = file.read()
 
-domains = Plugin.package_ipscope(ipscope,handle_ip=False,retType="list")
+domains = CommonUtils.package_ipscope(ipscope,handle_ip=False,retType="list")
 def scanner(ip,port):
     ref_service, ref_banner = query_service_and_banner(port, "tcp")
     web_banner, web_service, ostype, assettype, domain, position, proext = HttpWeb.detect(ip, port)

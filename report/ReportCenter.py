@@ -3,6 +3,7 @@ import base64
 import json
 import os
 import shutil
+import time
 
 from common.db.sqlite3_db import sqlite3_db
 from common.utils import update_file_content
@@ -56,7 +57,7 @@ class Report(object):
 
     def report_html(self):
         files = ["index.html","inspector.css","package.json","utils.js"]
-        report_files = os.path.join(self.report_dir,"files")
+        report_files = os.path.join(self.report_dir,"{0}_files".format(time.strftime("%H_%M_%S", time.localtime())))
         if not os.path.exists(report_files):
             os.makedirs(report_files)
         for f in files:

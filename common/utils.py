@@ -221,6 +221,16 @@ def computing_ports(ports):
 def is_default_ports(ports):
     return (ports in default_ports.keys())
 
+def update_file_content(file,old_str,new_str):
+  file_data = ""
+  with open(file, "r") as f:
+    for line in f:
+      if old_str in line:
+        line = line.replace(old_str,new_str)
+      file_data += line
+  with open(file,"w") as f:
+    f.write(file_data)
+
 class CommonUtils(object):
     @classmethod
     def ListTrim(cls, StringList, char=[]):

@@ -10,7 +10,6 @@ import re
 import cgi
 from optparse import OptionParser
 from multiprocessing import Process, Queue
-from Report import Report
 from TaskCenter import TaskCenter, TaskStatus
 from common.initsql import SQL1,SQL2
 from common.db.sqlite3_db import sqlite3_db
@@ -22,6 +21,8 @@ from pool.thread_pool import ThreadPool
 from IPlugin import IPlugin
 
 from common.logger.log_util import LogUtil as logging
+from report.ReportCenter import Report
+
 logger = logging.getLogger(__name__)
 class PortScan(IPlugin):
     def __init__(self,msgqueue=None,taskstatus=None,statusqueue=None):
@@ -37,11 +38,11 @@ class PortScan(IPlugin):
         self.finished = False
         self.db = None
         self.taskid = 0
-
-    def init_db(self):
         self.portdb = os.path.join(os.path.dirname(__file__), 'repertory',format(time.strftime("%Y-%m-%d", time.localtime())),"{0}.port.db".format(time.strftime("%H_%M_%S", time.localtime())))
         if not os.path.exists(os.path.dirname(self.portdb)):
             os.makedirs(os.path.dirname(self.portdb))
+
+    def init_db(self):
         self.db = sqlite3_db(self.portdb)
         self.db.create_table(SQL1)
         self.db.create_table(SQL2)
@@ -137,14 +138,6 @@ class PortScan(IPlugin):
                     self.product = self.product + 1
                     self.msgqueue.put(rs_one)
 
-    def _create_report(self):
-        if self.finished == True:
-            time.sleep(1)
-            logger.info("start creating reports.........")
-            rt = Report(self.portdb)
-            rt.report_html()
-            logger.info("report completion [{0}]".format(rt.filename))
-
 def cmdLineParser():
     optparser = OptionParser()
     optparser.add_option("-i", "--ipscope", dest="ipscope", type="string", help="Specify IP scan range,eg: 127.0.0.1/24 or 10.65.10.3-10.65.10.255")
@@ -176,6 +169,9 @@ def cmdLineParser():
         mainscan = PortScan(msgqueue,statusqueue=statusqueue)
         dirfuzz = DirFuzz(statusqueue=statusqueue)
         TaskCenter.register(statusqueue,[mainscan.name,dirfuzz.name])
+        dirdb = dirfuzz.fuzzdb
+        portdb = mainscan.portdb
+        rpt_tools = Report(portdb, dirdb)
         mainprocess = Process(target=mainscan.cmd_run, kwargs={"ipscope":ipscope,"ports":portscope,"scanmode":scanmode})
         dirfuzzprocess = Process(target=dirfuzz.funzz,args=(msgqueue,))
         taskcenterprocess = Process(target=TaskCenter.run,args=(statusqueue,))
@@ -188,9 +184,13 @@ def cmdLineParser():
         mainprocess.terminate()
         dirfuzzprocess.terminate()
         taskcenterprocess.terminate()
+        rpt_tools.report_html()
+
     else:
         test = PortScan()
         test.cmd_run(ipscope=ipscope, ports=portscope,scanmode=scanmode)
+        rpt_tools = Report(test.portdb)
+        rpt_tools.report_html()
 
 if __name__ == "__main__":
     cmdLineParser()

@@ -151,7 +151,6 @@ class IPlugin(object):
             t = threading.Thread(target=self._store)
             t.start()
             self._run(*args,**kwargs)
-            self._create_report()
         except:
             import traceback
             msg = traceback.format_exc()

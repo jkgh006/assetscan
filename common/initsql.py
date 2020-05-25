@@ -26,6 +26,8 @@ CREATE TABLE `fuzztask` (
     `taskid` INTEGER DEFAULT NULL,
     `assetid` INTEGER DEFAULT NULL,
     `url` varchar(500) DEFAULT NULL,
+    `path` varchar(500) DEFAULT NULL,
+    `reqcode` INTEGER DEFAULT 0,
     `banner` varchar(500) DEFAULT NULL,
     `reslength` INTEGER DEFAULT 0,
     `status` INTEGER DEFAULT 0

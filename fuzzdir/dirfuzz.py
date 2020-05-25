@@ -32,8 +32,6 @@ class DirFuzz(object):
         self.finished = False
         self.single = False if not self.url else True
         self.name = "dirscan"
-
-    def init_db(self):
         if not self.taskrun:
             if self.single:
                 self.fuzzdb = os.path.join(os.path.dirname(__file__),'..','repertory','tmp',"{0}.fuzz.db".format(time.strftime("%Y-%m-%d_%H_%M_%S", time.localtime())))
@@ -44,6 +42,8 @@ class DirFuzz(object):
 
         if not os.path.exists(os.path.dirname(self.fuzzdb)):
             os.makedirs(os.path.dirname(self.fuzzdb))
+
+    def init_db(self):
         self.fuzzdb = sqlite3_db(self.fuzzdb)
         self.fuzzdb.create_table(SQL3)
         logger.info("database (fuzz.db) initialization completed")
@@ -57,9 +57,9 @@ class DirFuzz(object):
         try:
             filename = "".join(random.sample('abcdefghijklmnopqrstuvwxyz0123456789', 6)) + ".css"
             dirname = "".join(random.sample('abcdefghijklmnopqrstuvwxyz0123456789', 6)) + "/"
-            res1 = requests.get(urljoin(url,filename), verify=False, allow_redirects=True, timeout=1)
-            res2 = requests.get(urljoin(url, dirname), verify=False, allow_redirects=True, timeout=1)
-            res3 = requests.get(url, verify=False, allow_redirects=True, timeout=1)
+            res1 = requests.get(urljoin(url,filename), verify=False, allow_redirects=True, timeout=3)
+            res2 = requests.get(urljoin(url, dirname), verify=False, allow_redirects=True, timeout=3)
+            res3 = requests.get(url, verify=False, allow_redirects=True, timeout=3)
             content = res3.content
             rs_one = {"taskid": self.taskid, "assetid": self.assetid, "url": url,"banner": base64.b64encode(content[0:100]), "reslength": len(content), "status": 1}
             self.fuzzdb.insert('fuzztask', rs_one, filter=False)
@@ -71,7 +71,7 @@ class DirFuzz(object):
     def req_ad_file(self,url,filename,cache):
         newurl = urljoin(url,filename)
         try:
-            res = requests.get(newurl, verify=False, allow_redirects=True, timeout=2)
+            res = requests.get(newurl, verify=False, allow_redirects=True, timeout=3)
             condition1 = (abs(len(res.content)-len(cache[0])) <=20) or (abs(len(res.content)-len(cache[1])) <= 20) or (abs(len(res.content.replace(filename,"").replace(newurl,""))-len(cache[2].replace(filename,"").replace(newurl,""))) <= 20)
             condition2 = (res.status_code !=405) and ((res.status_code >= 400 and res.status_code < 500) or (res.status_code > 500) or (res.status_code < 200))
             if condition2:
@@ -80,7 +80,7 @@ class DirFuzz(object):
                 if not condition1:
                     if mu.acquire():
                         content = res.content
-                        rs_one = {"taskid":self.taskid,"assetid":self.assetid,"url":newurl,"banner":base64.b64encode(content[0:100]),"reslength":len(content),"status":1}
+                        rs_one = {"taskid":self.taskid,"assetid":self.assetid,"url":newurl,"path":filename,"reqcode":res.status_code,"banner":base64.b64encode(content[0:100]),"reslength":len(content),"status":1}
                         self.fuzzdb.insert('fuzztask', rs_one, filter=False)
                         mu.release()
         except:
@@ -93,8 +93,8 @@ class DirFuzz(object):
         sql_2 = "update sqlite_sequence SET seq = 0 where name ='fuzztask'"
         self.fuzzdb.query(sql_1)
         self.fuzzdb.query(sql_2)
-        for id,taskid,assetid,url,banner,reslength,status,count in rs:
-            rs_one = {"taskid": taskid, "assetid": assetid, "url": url,"banner": banner, "reslength": reslength, "status": 1}
+        for id,taskid,assetid,url,path,reqcode,banner,reslength,status,count in rs:
+            rs_one = {"taskid": taskid, "assetid": assetid, "url": url,"path":path,"reqcode":reqcode,"banner": banner, "reslength": reslength, "status": 1}
             self.fuzzdb.insert('fuzztask', rs_one, filter=False)
             logger.info("url:{0} ".format(url))
 

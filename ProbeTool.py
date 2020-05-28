@@ -1,9 +1,6 @@
 # -*- coding:utf-8 -*-
 from __future__ import division
 import re
-from urlparse import urlparse
-from lxml import etree
-from common.qqwry import IPInfo
 from common.utils import get_server_profile, get_banner_by_content
 from constants import finger2https
 from thirdparty.connection.http_urllib3 import HttpUtil
@@ -52,9 +49,9 @@ class HttpWeb(object):
                     if content:
                         rs = re.findall(pregx, content)
                         if rs and len(rs) > 0:
-                            banner = rs[0] if not get_banner_by_content(content) else rs[0]+" ["+get_banner_by_content(content)+"]"
+                            banner = rs[0] if not get_banner_by_content(res) else "["+get_banner_by_content(res)+"] ==" + rs[0]
                         else:
-                            banner = content[0:100] if not get_banner_by_content(content) else content[0:100]+" ["+get_banner_by_content(content)+"]"
+                            banner = content[0:100] if not get_banner_by_content(res) else "["+get_banner_by_content(res)+"] ==" + res.content[0:100]
                     assettype = 1
                     proext = schema
                     break

@@ -128,6 +128,7 @@ class PortScan(IPlugin):
                 ref_service, ref_banner = query_service_and_banner(port, protocol)
                 web_banner, web_service, ostype, assettype, domain, position, proext = HttpWeb.detect(ip, port,httpclient)
                 banner = web_banner if web_banner else get_socket_banner(ip, port, ref_banner)
+                banner = banner.replace("\n", "").replace("\r", "")
                 banner = char_convert(banner)
                 banner = base64.b64encode(banner)
                 service = web_service if web_service else ref_service

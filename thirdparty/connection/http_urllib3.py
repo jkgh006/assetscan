@@ -7,9 +7,8 @@ urllib3.disable_warnings()
 class HttpUtil():
     def __init__(self):
         self.pool = urllib3.PoolManager()
-
-    def request(self, url, params=None,body=None, timeout=None,headers=None,redirect=False,**kwargs):
-
+        self.default_headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36',"Cookie":"rememberMe=xx"}
+    def request(self, url, params=None,body=None, timeout=None,headers={},redirect=False,**kwargs):
         if params:
             url = '%s?%s' % (url, urlencode(params))
         if body:
@@ -28,7 +27,7 @@ class HttpUtil():
                 retries = 3
             else:
                 retries = False
-
+            headers.update(self.default_headers)
             response = self.pool.request(method, url, body, retries=retries,redirect=redirect, headers=headers,timeout=urllib3.Timeout(connect=timeout, read=2.0),**kwargs)
             response.content = response.data
             response.status_code = response.status

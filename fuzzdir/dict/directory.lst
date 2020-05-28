@@ -26,6 +26,7 @@
 /admin
 /publish
 /dwr
+/a/login
 /editor/filemanager/browser/default/connectors/jsp
 /editor/filemanager/upload
 /resource/fckeditor/editor/filemanager/browser/default

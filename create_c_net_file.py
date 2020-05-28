@@ -1,8 +1,9 @@
-from Main import Plugin
+from common.utils import CommonUtils
+
 with open("hosts.txt", "rb+") as file:
     ipscope = file.read()
 
-domains = Plugin.package_ipscope_c_net(ipscope)
+domains = CommonUtils.package_ipscope_c_net(ipscope)
 
 flag = 0
 for ipc in domains:

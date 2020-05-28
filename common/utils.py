@@ -56,14 +56,27 @@ class OsType(object):
 
         return ostype
 
-def get_banner_by_content(content):
+def get_banner_by_content(res):
+    ret = []
     for k,cues in fingerprint.items():
+        rs = []
         for cue in cues:
-            preg = re.compile(cue)
-            ret = re.search(preg,content)
-            if ret:
-                return k
-    return ""
+            if cue.get("content"):
+                if cue.get("type") == "regex":
+                    preg = re.compile(cue.get("content"))
+                    rs.append(True if re.search(preg,res.content) else False)
+                elif cue.get("type") == "string":
+                    rs.append(cue.get("content") in res.content)
+            if cue.get("resheader"):
+                resp_headers = str(dict(res.resp_headers))
+                if cue.get("type") == "regex":
+                    preg = re.compile(cue.get("resheader"))
+                    rs.append(True if re.search(preg, resp_headers) else False)
+                elif cue.get("type") == "string":
+                    rs.append(cue.get("resheader") in resp_headers)
+        if rs and all(rs):
+            ret.append(k)
+    return ",".join(ret)
 
 def get_server_profile(headers):
     resp_headers = {}

@@ -1,5 +1,6 @@
 # -*- coding:utf-8 -*-
 import base64
+import cgi
 import os
 import random
 import sys
@@ -10,7 +11,7 @@ from thirdparty.connection.http_urllib3 import HttpUtil
 
 from TaskCenter import TaskStatus, TaskCenter
 from common.initsql import SQL3
-from common.utils import char_convert
+from common.utils import char_convert, get_banner_by_content
 from pool.thread_pool import ThreadPool
 from ProbeTool import HttpWeb
 from common.db.sqlite3_db import sqlite3_db
@@ -74,21 +75,22 @@ class DirFuzz(object):
         try:
             res = self.httpclient.request(newurl,timeout=3,redirect=True)
             condition1 = (abs(len(res.content)-len(cache[0])) <=20) or (abs(len(res.content)-len(cache[1])) <= 20) or (abs(len(res.content.replace(filename,"").replace(newurl,""))-len(cache[2].replace(filename,"").replace(newurl,""))) <= 20)
-            condition2 = (res.status_code !=405) and ((res.status_code >= 400 and res.status_code < 500) or (res.status_code > 500) or (res.status_code < 200))
+            condition2 = (res.status_code not in [401,405]) and ((res.status_code >= 400 and res.status_code < 500) or (res.status_code > 500) or (res.status_code < 200))
             if condition2:
                 pass
             else:
                 if not condition1:
                     if mu.acquire():
-                        content = res.content
-                        rs_one = {"taskid":self.taskid,"assetid":self.assetid,"url":newurl,"path":filename,"reqcode":res.status_code,"banner":base64.b64encode(char_convert(content[0:100])),"reslength":len(content),"status":1}
+                        content = res.content[0:100] if not get_banner_by_content(res) else "["+get_banner_by_content(res)+"] ==" + res.content[0:100]
+                        content = content.replace("\n","").replace("\r","")
+                        rs_one = {"taskid":self.taskid,"assetid":self.assetid,"url":newurl,"path":filename,"reqcode":res.status_code,"banner":cgi.escape(base64.b64encode(char_convert(content))),"reslength":len(res.content),"status":1}
                         self.fuzzdb.insert('fuzztask', rs_one, filter=False)
                         mu.release()
         except:
             pass
 
     def result_unique(self):
-        sql = "select * from (select *,count(reslength) as flag from fuzztask where taskid={0} group by reslength) where flag=1".format(self.taskid,self.assetid)
+        sql = "select * from (select *,count(reslength) as flag from fuzztask where taskid={0} group by reslength)".format(self.taskid)
         rs = self.fuzzdb.queryall(sql)
         sql_1 = "delete from fuzztask"
         sql_2 = "update sqlite_sequence SET seq = 0 where name ='fuzztask'"

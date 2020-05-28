@@ -1,6 +1,11 @@
 # -*- coding:utf-8 -*-
 from __future__ import division
 import re
+<<<<<<< HEAD
+=======
+from urlparse import urlparse
+from common.qqwry import IPInfo
+>>>>>>> 3e4063cdcbe8cb0e7988504d4b777f14f729a5ad
 from common.utils import get_server_profile, get_banner_by_content
 from constants import finger2https
 from thirdparty.connection.http_urllib3 import HttpUtil

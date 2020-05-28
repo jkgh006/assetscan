@@ -29,7 +29,7 @@ task-run  为任务模式扫描，此时任务模式采用多进程多线程模�
 ```
 ###二进制bin目录
 
-chmod 777 bin -R
+chmod 777 ./bin -R
 
 ###扫描console信息如下
 

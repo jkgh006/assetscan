@@ -251,17 +251,33 @@ class CommonUtils(object):
         return rs_list
 
     @classmethod
+    def package_ipscope_mid(cls,ipscope):
+        regex = re.compile("(?P<subfix>(?:\d+\.){3})(?P<start>\d+)-(?:\d+\.){3}(?P<end>\d+)")
+        ret = re.match(regex,ipscope)
+        if ret:
+            start = int(ret.group('start'))
+            end = int(ret.group('end'))
+            subfix = ret.group('subfix')
+            if end > start:
+                return ["{0}{1}".format(subfix,x) for x in range(start,end+1)]
+        return ipscope
+
+    @classmethod
     def package_ipscope(cls, ipscope, handle_ip=True, retType="string"):
         rs_list = []
         ret_list = []
         ipscope_list = cls.ListTrim(ipscope.split("\n"))
         for cues in ipscope_list:
-            if "," in cues:
-                rs_list = rs_list + cls.ListTrim(cues.split(","))
-            elif ";" in cues:
-                rs_list = rs_list + cls.ListTrim(cues.split(";"))
+            dir = cls.package_ipscope_mid(cues)
+            if isinstance(dir,list):
+                rs_list = rs_list + cls.ListTrim(dir)
             else:
-                rs_list.append(cues)
+                if "," in cues:
+                    rs_list = rs_list + cls.ListTrim(cues.split(","))
+                elif ";" in cues:
+                    rs_list = rs_list + cls.ListTrim(cues.split(";"))
+                else:
+                    rs_list.append(cues)
 
         rs_list = list(set(rs_list))
         if handle_ip:

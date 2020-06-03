@@ -4,7 +4,12 @@ import platform
 import re
 import socket
 from thirdparty import chardet
-
+try:
+    import hashlib
+    hash = hashlib.md5()
+except ImportError:
+    import md5
+    hash = md5.new()
 from common.db.sqlite3_db import sqlite3_db
 from constants import default_ports, fingerprint
 
@@ -212,6 +217,10 @@ def update_file_content(file,old_str,new_str):
       file_data += line
   with open(file,"w") as f:
     f.write(file_data)
+
+def md5_string(value):
+    hash.update(value)
+    return repr(hash.digest())
 
 class CommonUtils(object):
     @classmethod

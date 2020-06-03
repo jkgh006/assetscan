@@ -1,6 +1,5 @@
 # -*- coding:utf-8 -*-
 import base64
-import md5
 import os
 import sys
 import uuid
@@ -13,7 +12,8 @@ from multiprocessing import Process, Queue
 from TaskCenter import TaskCenter, TaskStatus
 from common.initsql import SQL1,SQL2
 from common.db.sqlite3_db import sqlite3_db
-from common.utils import query_service_and_banner, get_socket_banner, char_convert, computing_ports, WINDOWS, UsePlatform,  CommonUtils
+from common.utils import query_service_and_banner, get_socket_banner, char_convert, computing_ports, WINDOWS, \
+    UsePlatform, CommonUtils, md5_string
 from ProbeTool import HttpWeb
 from constants import default_ports
 from fuzzdir.dirfuzz import DirFuzz
@@ -35,7 +35,7 @@ class PortScan(IPlugin):
         self._name = "portscan"
         self._level = 10
         self.rate = 500
-        self.uuid_hash = md5.md5(str(uuid.uuid4())).hexdigest()
+        self.uuid_hash = md5_string(str(uuid.uuid4()))
         self.finished = False
         self.db = None
         self.taskid = 0

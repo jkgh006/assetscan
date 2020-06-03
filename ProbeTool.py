@@ -1,7 +1,6 @@
 # -*- coding:utf-8 -*-
 from __future__ import division
 import re
-from urlparse import urlparse
 from common.utils import get_server_profile, get_banner_by_content
 from constants import finger2https
 from thirdparty.connection.http_urllib3 import HttpUtil

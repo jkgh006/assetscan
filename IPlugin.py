@@ -1,7 +1,8 @@
 # -*- coding:utf-8 -*-
-import md5
 import threading
 from common.logger.log_util import LogUtil as logging
+from common.utils import md5_string
+
 logger = logging.getLogger(__name__)
 mu = threading.Lock()
 
@@ -110,7 +111,7 @@ class IPlugin(object):
             else:
                 unique = range(len(package))
             filters = [str(package[x]) for x in unique]
-            unique_hash = md5.md5(",".join(filters)).hexdigest()
+            unique_hash = md5_string(",".join(filters))
         elif isinstance(package,dict):
             filters = {}
             if unique:
@@ -122,7 +123,7 @@ class IPlugin(object):
             for x in unique:
                 filters.update({x:package.get(x)})
 
-            unique_hash = md5.md5(",".join([ str(x) for x in filters.values()])).hexdigest()
+            unique_hash = md5_string(",".join([ str(x) for x in filters.values()]))
         else:
             raise Exception('unique Only support list，tuple，dict')
 

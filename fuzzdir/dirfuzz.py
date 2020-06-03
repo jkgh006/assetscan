@@ -163,8 +163,6 @@ if __name__ == "__main__":
         optparser.print_help()
         sys.exit(0)
     dbname = options.dbname
-    taskid = options.taskid
-    assetid = options.assetid
     url = options.url
-    test = DirFuzz(taskid=taskid,assetid=assetid,dbname=dbname,url=url)
+    test = DirFuzz(dbname=dbname,url=url)
     test.funzz()

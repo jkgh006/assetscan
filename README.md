@@ -27,10 +27,6 @@ scanmode  为指定扫描模式，默认情况下是fast模式，由于有些内
 file      为指定文件进行批量扫描
 task-run  为任务模式扫描，此时任务模式采用多进程多线程模式，会一并扫描目录模块
 ```
-###二进制bin目录
-
-chmod 777 ./bin -R
-
 ###扫描console信息如下
 
 ![avatar](scanrs.jpg)

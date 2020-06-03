@@ -68,7 +68,7 @@ class Report(object):
         logger.info("scan result: {0}".format(os.path.join(report_files,"index.html")))
 
 if __name__ == "__main__":
-    dirdb = r"D:\gitproject\assetscan\repertory\2020-05-26\17_46_31.fuzz.db"
-    portdb = r"D:\gitproject\assetscan\repertory\2020-05-26\17_46_31.port.db"
+    dirdb = r"D:\gitproject\assetscan\repertory\2020-06-01\13_49_47.fuzz.db"
+    portdb = r"D:\gitproject\assetscan\repertory\2020-06-01\13_49_47.port.db"
     test = Report(portdb,dirdb)
     print test.create_scan_datajson()

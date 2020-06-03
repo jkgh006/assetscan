@@ -10,6 +10,7 @@ try:
 except ImportError:
     import md5
     hash = md5.new()
+
 from common.db.sqlite3_db import sqlite3_db
 from constants import default_ports, fingerprint
 
@@ -220,7 +221,7 @@ def update_file_content(file,old_str,new_str):
 
 def md5_string(value):
     hash.update(value)
-    return repr(hash.digest())
+    return hash.hexdigest()
 
 class CommonUtils(object):
     @classmethod

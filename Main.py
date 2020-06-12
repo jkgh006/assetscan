@@ -79,20 +79,24 @@ class PortScan(IPlugin):
                 else:
                     break
         else:
+            pool = ThreadPool(50)
             iplist,portlist = command
             for ip in iplist:
                 for port in portlist:
-                    try:
-                        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                        s.settimeout(0.2)
-                        port = int(port)
-                        if s.connect_ex((ip, port)) == 0:
-                            self.report(ip, port, "tcp")
-                    except Exception as e:
-                        pass
-                    finally:
-                        s.close()
+                    pool.add_task(self.port_scan,ip,port)
+            pool.wait_all_complete()
 
+    def port_scan(self,ip,port):
+        try:
+            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            s.settimeout(0.2)
+            port = int(port)
+            if s.connect_ex((ip, port)) == 0:
+                self.report(ip, port, "tcp")
+        except Exception as e:
+            pass
+        finally:
+            s.close()
 
     def _run(self, *args,**kwargs):
         self.init_db()

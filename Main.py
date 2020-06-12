@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
 import base64
 import os
+import socket
 import sys
 import uuid
 import subprocess
@@ -58,31 +59,40 @@ class PortScan(IPlugin):
         self._report(package)
 
     def start_scanning(self,scanmode,command):
-
         if scanmode == "fast":
             preg = re.compile(r".*Discovered open port (?P<port>\d+)/(?P<protocol>\w+) on (?P<ip>((25[0-5]|2[0-4]\d|[01]?\d\d?)($|(?!\.$)\.)){4}).*",re.I)
+            cmddir = os.path.abspath(os.path.join(os.path.dirname(__file__), 'bin'))
+            process = subprocess.Popen(command, cwd=cmddir, shell=False, stdout=subprocess.PIPE,
+                                       stderr=subprocess.STDOUT)
+            while True:
+                time.sleep(0.1)
+                returncode = process.poll()
+                line = process.stdout.readline()
+                line = line.strip()
+                if line:
+                    rs = re.match(preg, line)
+                    if rs:
+                        self.report(rs.group("ip"), rs.group("port"), rs.group("protocol"))
+                pid = process.pid
+                if returncode is None:
+                    continue
+                else:
+                    break
         else:
-            if UsePlatform() == WINDOWS:
-                preg = re.compile(r".*\d+/\d+/\d+ \d+:\d+:\d+ (?P<protocol>\w+)://(?P<ip>((25[0-5]|2[0-4]\d|[0-1]?\d?\d)(\.(25[0-5]|2[0-4]\d|[0-1]?\d?\d)){3})):(?P<port>\d+).*",re.I)
-            else:
-                preg = re.compile(r".*INFO\\[\d+\\] (?P<protocol>\w+)://(?P<ip>((25[0-5]|2[0-4]\d|[0-1]?\d?\d)(\.(25[0-5]|2[0-4]\d|[0-1]?\d?\d)){3})):(?P<port>\d+).*",re.I)
+            iplist,portlist = command
+            for ip in iplist:
+                for port in portlist:
+                    try:
+                        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                        s.settimeout(0.2)
+                        port = int(port)
+                        if s.connect_ex((ip, port)) == 0:
+                            self.report(ip, port, "tcp")
+                    except Exception as e:
+                        pass
+                    finally:
+                        s.close()
 
-        cmddir = os.path.join(os.path.join(os.path.dirname(__file__), 'bin'))
-        process = subprocess.Popen(command, cwd=cmddir, shell=False, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        while True:
-            time.sleep(0.1)
-            returncode = process.poll()
-            line = process.stdout.readline()
-            line = line.strip()
-            if line:
-                rs = re.match(preg,line)
-                if rs:
-                    self.report(rs.group("ip"),rs.group("port"),rs.group("protocol"))
-            pid = process.pid
-            if returncode is None:
-                continue
-            else:
-                break
 
     def _run(self, *args,**kwargs):
         self.init_db()

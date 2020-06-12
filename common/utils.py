@@ -3,6 +3,8 @@ import os
 import platform
 import re
 import socket
+
+from common.IPy import IP
 from thirdparty import chardet
 try:
     import hashlib
@@ -328,19 +330,37 @@ class CommonUtils(object):
             return ls_return
 
     @classmethod
+    def ipip(cls,a, rs=[]):
+        try:
+            ips = IP(a)
+            for ip in ips:
+                rs.append(str(ip))
+        except Exception as e:
+            b = (a.split('/')[0]).split('.')
+            a = b[0] + '.' + b[1] + '.' + b[2] + '.' + str(int(b[-1]) - 1) + '/' + a.split('/')[-1]
+            cls.ipip(a, rs=rs)
+
+    @classmethod
     def create_command(cls,scanmode, ipscope, ports, pseudo_ip, pseudo_port,rate):
         if scanmode == "fast":
             if UsePlatform() == WINDOWS:
                 command = ["cmd.exe", "/c", "masscan", ipscope, "-p", str(ports), "--max-rate", str(rate)]
             else:
-                command = ["masscan", ipscope, "-p", str(ports), "--max-rate", str(rate)]
+                command = ["./masscan", ipscope, "-p", str(ports), "--max-rate", str(rate)]
             if pseudo_ip:
                 command = command + [" --source-ip ", str(pseudo_ip)]
             if pseudo_port:
                 command = command + [" --source-port ", str(pseudo_port)]
         else:
-            if UsePlatform() == WINDOWS:
-                command = ["cmd.exe", "/c", "main", "-p", str(ports), "-h",ipscope, "-r", str(rate)]
-            else:
-                command = ["main", "-p", str(ports), ipscope, "-r", str(rate)]
+            rs_list = []
+            for ip in ipscope.split(","):
+                cls.ipip(ip, rs_list)
+            command = rs_list,ports.split(",")
         return command
+
+if __name__ == "__main__":
+    ipscope = ""
+    with open("../rhosts.txt","rb+") as file:
+        ipscope = file.read()
+    ipscope = CommonUtils.package_ipscope(ipscope)
+    print ipscope.replace(",","\n")

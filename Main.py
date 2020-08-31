@@ -13,8 +13,7 @@ from multiprocessing import Process, Queue
 from TaskCenter import TaskCenter, TaskStatus
 from common.initsql import SQL1,SQL2
 from common.db.sqlite3_db import sqlite3_db
-from common.utils import query_service_and_banner, get_socket_banner, char_convert, computing_ports, WINDOWS, \
-    UsePlatform, CommonUtils, md5_string
+from common.utils import query_service_and_banner, get_socket_banner, char_convert, computing_ports, CommonUtils, md5_string
 from ProbeTool import HttpWeb
 from constants import default_ports
 from fuzzdir.dirfuzz import DirFuzz
